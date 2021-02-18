@@ -140,7 +140,7 @@ byte Find_Hammingweight(unsigned char src)
 	return count;
 }
 
-void Calculates_SumX(double* Sum_xx, double* Sum_Ex, double TraceTemp[TRACE_NUM][TRACE_LENGTH])
+void Calculates_SumX(double* Sum_xx, double* Sum_Ex, char TraceTemp[TRACE_NUM][TRACE_LENGTH])
 {
 	/*
 	 *double Sum_xx[TRACE_LENGTH] = { 0x00, };
@@ -197,7 +197,7 @@ void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY
 	}
 }
 
-void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], double TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY])
+void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], char TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY])
 {
 	int cnt_i = 0, cnt_j = 0, cnt_k = 0, cnt_s = 0;
 	double sum_xy = 0x00;

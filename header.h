@@ -11,10 +11,10 @@
 #include <memory.h>
 #include <math.h>
 
-#define TRACE_NUM 1 //!20000
-#define TRACE_LENGTH 1 //!3253
+#define TRACE_NUM 20000 //!20000
+#define TRACE_LENGTH 45000 //!45000
 #define AES_PLANETXT_LEN 16
-#define S_BOX 1//! 
+#define S_BOX 4//! 
 #define GUESSKEY 256
 
 
@@ -28,9 +28,9 @@ void ShiftRow(unsigned char* state);
 void InvSubByte(unsigned char* state);
 void InvShiftRow(unsigned char* state);
 void AddRoundKey_1Round(unsigned char* state, unsigned char* key);
-void Calculates_SumX(double* Sum_xx, double* Sum_Ex, double TraceTemp[TRACE_NUM][TRACE_LENGTH]);
+void Calculates_SumX(double* Sum_xx, double* Sum_Ex, char TraceTemp[TRACE_NUM][TRACE_LENGTH]);
 void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY]);
-void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], double TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY]);
+void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], char TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY]);
 byte Find_HammingDistance(unsigned char before_distance, unsigned char after_distance);
 byte Find_Hammingweight(unsigned char src);
 
