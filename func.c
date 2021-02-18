@@ -40,6 +40,28 @@ void convertStr2Byte(unsigned char* from, int size, unsigned char* to)
 
 }
 
+void ShiftRow(unsigned char* state)
+{
+	int temp, temp2;
+	temp = state[13]; //1 bytes Leftshift
+	state[13] = state[1];
+	state[1] = state[5];
+	state[5] = state[9];
+	state[9] = temp;
+
+	temp = state[10]; //2 bytes Leftshift
+	temp2 = state[14];
+	state[10] = state[2];
+	state[14] = state[6];
+	state[2] = temp;
+	state[6] = temp2;
+
+	temp = state[7]; // 3 bytes Leftshift
+	state[7] = state[3];
+	state[3] = state[15];
+	state[15] = state[11];
+	state[11] = temp;
+}
 
 void InvShiftRow(unsigned char* state)
 {
@@ -100,6 +122,23 @@ byte Find_HammingDistance(unsigned char before_distance, unsigned char after_dis
 	//printf("%x\n", count);
 	return count;
 }
+byte Find_Hammingweight(unsigned char src)
+{
+	byte count = 0;
+	int cnt_i = 0;
+
+	//printf("temp = %02X\n", temp);
+	for (cnt_i = 0; cnt_i < 8; cnt_i++)
+	{
+		if (((src >> cnt_i) & 0x01) == 1)
+		{
+			count++;
+		}
+	}
+
+	//printf("%x\n", count);
+	return count;
+}
 
 void Calculates_SumX(double* Sum_xx, double* Sum_Ex, double TraceTemp[TRACE_NUM][TRACE_LENGTH])
 {
@@ -127,12 +166,13 @@ void Calculates_SumX(double* Sum_xx, double* Sum_Ex, double TraceTemp[TRACE_NUM]
 	}
 }
 
-void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY], byte HammingDistance[S_BOX][TRACE_NUM][GUESSKEY])
+
+void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY])
 {
 	/*
 	 *float Sum_yy[S_BOX][GUESSKEY] = { 0x00, };
 	 *float Sum_Ey[S_BOX][GUESSKEY] = { 0x00, };
-	 *byte HammingDistance[AES_PLANETXT_LEN][TRACE_NUM][GUESSKEY] = {0x00,};
+	 *byte HammingWeight[AES_PLANETXT_LEN][TRACE_NUM][GUESSKEY] = {0x00,};
 	 */
 
 	int cnt_i = 0, cnt_j = 0, cnt_k = 0;
@@ -145,8 +185,8 @@ void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY
 		{
 			for (cnt_k = 0; cnt_k < TRACE_NUM; cnt_k++)
 			{
-				sum_ey += HammingDistance[cnt_i][cnt_k][cnt_j];
-				sum_yy += (HammingDistance[cnt_i][cnt_k][cnt_j] * HammingDistance[cnt_i][cnt_k][cnt_j]);
+				sum_ey += HammingWeight[cnt_i][cnt_k][cnt_j];
+				sum_yy += (HammingWeight[cnt_i][cnt_k][cnt_j] * HammingWeight[cnt_i][cnt_k][cnt_j]);
 			}
 			Sum_Ey[cnt_i][cnt_j] = sum_ey;
 			Sum_yy[cnt_i][cnt_j] = sum_yy;
@@ -157,7 +197,7 @@ void Calculates_SumY(float Sum_yy[S_BOX][GUESSKEY], float Sum_Ey[S_BOX][GUESSKEY
 	}
 }
 
-void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], double TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingDistance[S_BOX][TRACE_NUM][GUESSKEY])
+void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], double TraceTemp[TRACE_NUM][TRACE_LENGTH], byte HammingWeight[S_BOX][TRACE_NUM][GUESSKEY])
 {
 	int cnt_i = 0, cnt_j = 0, cnt_k = 0, cnt_s = 0;
 	double sum_xy = 0x00;
@@ -170,7 +210,7 @@ void Calculates_SumXY(double Sum_xy[S_BOX][GUESSKEY][TRACE_LENGTH], double Trace
 			{
 				for (cnt_s = 0; cnt_s < TRACE_NUM; cnt_s++)
 				{
-					sum_xy += (double)(HammingDistance[cnt_i][cnt_s][cnt_j] * TraceTemp[cnt_s][cnt_k]);
+					sum_xy += (double)(HammingWeight[cnt_i][cnt_s][cnt_j] * TraceTemp[cnt_s][cnt_k]);
 				}
 				Sum_xy[cnt_i][cnt_j][cnt_k] = sum_xy;
 				sum_xy = 0x00;
